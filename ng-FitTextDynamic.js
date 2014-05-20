@@ -57,7 +57,6 @@ angular.module( 'ngFitTextDynamic', [] )
         scope.resizer();
 
         scope.dynamicResizer = function() {
-          debugger;
           if (element[0].children[0].offsetHeight < scope.fontSizeNumeric*2) {
             if (scope.fontSizeNumeric+4 < scope.maxFontSize) {
               scope.fontSizeNumeric += 4;
