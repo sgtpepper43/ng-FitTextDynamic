@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-ng-app="ngFitTextDynamic">
+<html ng-app="demoApp">
 <head>
 
   <title>ng-FitTextDynamic</title>
@@ -7,16 +7,20 @@
   <script type="text/javascript" src="http://code.angularjs.org/1.2.12/angular.min.js"></script>
   <script type="text/javascript" src="ng-FitTextDynamic.js"></script>
   <script type="text/javascript">
-  function DemoCtrl() {
-    this.dynamicText = "Edit Me";
-  }
+  	var demoApp = angular.module('demoApp', ['ngFitTextDynamic']);
+    demoApp.controller('DemoCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
+      $scope.dynamicText = 'Edit Me';
+      $timeout(function () {
+        $scope.$broadcast('dynamic resize');
+      });
+    }]);
   </script>
 
   <link rel="stylesheet/less" type="text/css" href="styles/main.less"/>
   <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.5.0/less.min.js"></script>
 
 </head>
-<body>
+<body ng-controller="DemoCtrl">
 
 <header id="top">
   <a href="https://github.com/sgtpepper43/ng-FitTextDynamic">View it on GitHub</a>
@@ -30,21 +34,20 @@
 
   <header>
     <h1>
-      <span class="line0" data-fittext="2" data-fittext-min="30">ng-FitTextDynamic</span>
-      <span class="line1" data-fittext=".315">FitText</span>
-      <span class="line2" data-fittext=".76">rustled my jimmies</span>
-      <span class="line3" data-fittext="3" data-fittext-min="20">a fork of an AngularJS rework of the original</span>
+      <span class="line0" dynamic-text="dyamic resize" dynamic-text-min="30" dynamic-text-max="140">ng-FitTextDynamic</span>
+      <span class="line1" dynamic-text="dynamic resize" dynamic-text-min="4" dynamic-text-max="140">FitText</span>
+      <span class="line2" dynamic-text="dynamic resize" dynamic-text-min="4" dynamic-text-max="140">rustled my jimmies</span>
+      <span class="line3" dynamic-text="dynamic resize" dynamic-text-min="20" dynamic-text-max="140">a fork of an AngularJS rework of the original</span>
       <a class="download" href="https://github.com/sgtpepper43/ng-FitTextDynamic.js">Download from GitHub</a>
     </h1>
 
-    <h2>ng-FitTextDynamic makes font-sizes flexible. Use this directive in your fluid or responsive layout to achieve
-      scalable headlines that fill the width of a parent element. It differs from the original in that it can also auto size dynamically generated text.</h2>
+<h2>ng-FitTextDynamic makes font-sizes flexible. Use it whenever you're displaying dynamic text of different and unknown widths, or even for static text (though you might consider using <a href="https://github.com/patrickmarabeas/ng-FitText.js">ng-fittext</a> if you only need to resize static text).</h2>
   </header>
 
-  <div ng-controller="DemoCtrl as demo">
-    <h2 data-fittext data-fittext-event="dynamic resize" data-fittext-min = "14" data-fittext-max="140">{{demo.dynamicText}}</h2>
-    <input ng-model = "demo.dynamicText" ng-change="$broadcast('dynamic resize')" />
-    <p>You can resize text based on how much text there is. Just broadcast the even given in data-fittext-event, and make sure you have min and max values set!</p>
+  <div>
+    <h2 dynamic-text="dynamic resize" dynamic-text-min = "14" dynamic-text-max="140">{{dynamicText}}</h2>
+    <input ng-model = "dynamicText" ng-change="$broadcast('dynamic resize')" />
+    <p>In addition to resizing on window events, you can also resize whenever you want (like when something finishes loading). Just broadcast the even given in dynamic-text, and make sure you have min and max values set!</p>
     <input type="button" value="Broadcast" ng-click="$broadcast('dynamic resize')"/>
   </div>
 
@@ -54,37 +57,34 @@
 
     <p>Grab it with Bower:</p>
 
-    <code>bower install ngFitText</code>
+    <code>bower install ngFitTextDynamic</code>
 
     <p>Include it in your AngularJS application</p>
 
-    <code>var myApp = angular.module( 'myApp', [ 'ngFitText' ] );</code>
+    <code>var myApp = angular.module( 'myApp', [ 'ngFitTextDynamic' ] );</code>
 
     <p>Apply it to your text</p>
 
-    <code>&lt;h1 data-fittext&gt;FitText&lt;/h1&gt;</code>
+    <code>&lt;h1 dynamic-text&gt;FitText&lt;/h1&gt;</code>
 
     <p>There are also additional attributes which can be used.</p>
 
-    <p>Specifying a value for data-fittext allows you to fine tune the text size. The default is 1. Increasing this
-      number (ie 1.5) will resize the text more aggressively. Decreasing this number (ie 0.5) will reduce the
-      aggressiveness of resize. data-fittext-min and data-fittext-max allow you to set upper and lower limits. This can
-      also be set globally (applying to all uses) via the fitTextConfigProvider as seen below.</p>
+    <p>Specifying a value for dynamic-text allows you to set an event on which to trigger text resizing.
+      dynamic-text-min and dynamic-text-max allow you to set upper and lower limits. This can
+      also be set globally (applying to all uses) via the dynamicTextConfigProvider as seen below.</p>
 
-    <code>&lt;h1 data-fittext=".315" data-fittext-min="12" data-fittext-max="50"&gt;ngFitText&lt;/h1&gt;</code>
-
-    <p>The element needs to either be a block element or an inline-block element with a width specified (% or px).</p>
+    <code>&lt;h1 dynamic-text="event name" dynamic-text-min="12" dynamic-text-max="50"&gt;ngFitText&lt;/h1&gt;</code>
 
     <h3>Debounce</h3>
 
-    <p>Debouce (limiting the rate at which FitText will be called on window resize) is available. You can pass
+    <p>Debouce (limiting the rate at which DynamicFitText will be called on window resize) is available. You can pass
       initialization parameters to the ngFitText constructor to achieve this:</p>
 
     <code>
 
-      <span>myApp.config( function( fitTextConfigProvider ) {
+      <span>myApp.config( function( dynamicTextConfigProvider ) {
 
-      <span>fitTextConfigProvider.config = {
+      <span>dynamicTextConfigProvider.config = {
           <span>debounce: true,</span>
           <span>delay: 1000,</span>
           <span>min: 20, //minimum global font size</span>
@@ -93,10 +93,10 @@
 
       <span>// OR</span>
 
-      <span>fitTextConfigProvider.config.debounce = true;</span>
-      <span>fitTextConfigProvider.config.delay = 1000;</span>
-      <span>fitTextConfigProvider.config.min = 20;</span>
-      <span>fitTextConfigProvider.config.max = 100;</span>
+      <span>dynamicTextConfigProvider.config.debounce = true;</span>
+      <span>dynamicTextConfigProvider.config.delay = 1000;</span>
+      <span>dynamicTextConfigProvider.config.min = 20;</span>
+      <span>dynamicTextConfigProvider.config.max = 100;</span>
 
       });</span>
 

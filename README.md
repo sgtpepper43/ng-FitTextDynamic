@@ -1,6 +1,6 @@
 # ng-FitTextDynamic
 
-### ng-FitTextDyanmic makes font-sizes flexible. Use this AngularJS directive in your fluid or responsive layout to achieve scalable headlines that fill the width of a parent element.
+### ng-FitTextDynamic makes font-sizes flexible. Use it whenever you're displaying dynamic text of different and unknown widths, or even for static text (though you might consider using ng-fitText if you only need to resize static text).
 
 This is a fork of a rework of the original jQuery plugin which can be found here: https://github.com/davatron5000/FitText.js.
 Original angular project is here: https://github.com/patrickmarabeas/ng-FitText.js
@@ -15,24 +15,16 @@ Include it in your AngularJS application
 
 Apply it to your text
 
-    <h1 data-fittext>FitText</h1>
+    <h1 dynamic-text>FitText</h1>
 
 There are also additional attributes which can be used.
 
-Specifying a value for data-fittext allows you to fine tune the text size. The default is 1. Increasing this number (ie 1.5) will resize the text more aggressively. Decreasing this number (ie 0.5) will reduce the aggressiveness of resize. data-fittext-min and data-fittext-max allow you to set upper and lower limits.
+Specifying a value for dynamic-text allows you to set an event to trigger the resize manually, like after loading data.
 
-    <h1 data-fittext=".315" data-fittext-min="12" data-fittext-max="50">ng-FitText</h1>
+    <h1 dynamic-text="event name" dynamic-text-min="12" dynamic-text-max="50">ng-FitText</h1>
+Then you can resize the text whenever you want using something like:
 
-The element needs to either be a block element or an inline-block element with a width specified (% or px).
-
-### Dynamic Text
-To make sure the text all fits on one line when you're using dynamic and not static text, specify an event:
-
-    data-fittext-event="event name"
-
-Then wherever your model is changing or loading, broadcast that event, like in this example:
-
-    <input ng-change="$broadcast('event name')"/>
+    <input type="button" ng-change="$broadcast('event name')"/>
 It finds the right font size by iterating through different sizes until it breaks the line.
 
 Note: It will not shrink strings without any spaces or anything, unless you turn word-break: all on.
@@ -41,16 +33,16 @@ I'm not responsible for when you don't set a max size and you make the model an 
 
 ### Debounce
 
-Debouce (limiting the rate at which FitText will be called on window resize) is available. You can pass initialization parameters to the ngFitText constructor to achieve this:
+Debouce (limiting the rate at which DynamicFitText will be called on window resize) is available. You can pass initialization parameters to the ngDynamicFitText constructor to achieve this:
 
-    myApp.config( function( fitTextConfigProvider ) {
-        fitTextConfigProvider.config = {
+    myApp.config( function( dynamicTextConfigProvider ) {
+        dynamicTextConfigProvider.config = {
             debounce: true, //default is false
             delay: 1000 //default is 250
         };
 
         // OR
 
-        fitTextConfigProvider.config.debounce = true;
-        fitTextConfigProvider.config.delay = 1000;
+        dynamicTextConfigProvider.config.debounce = true;
+        dynamicTextConfigProvider.config.delay = 1000;
     });

@@ -1,4 +1,4 @@
-/* ng-FitTextDynamic v1.0.0
+/* ng-FitTextDynamic v1.0.3
  * https://github.com/sgtpepper43/ng-FitTextDynamic
  *
  * Original angular project: https://github.com/patrickmarabeas/ng-FitText.js
@@ -10,7 +10,7 @@
  * Released under the MIT license
  * http://opensource.org/licenses/mit-license.php
  *
- * Date: 20/05/2014
+ * Date: 21/05/2014
  */
 
 'use strict';
@@ -23,7 +23,7 @@ angular.module( 'ngFitTextDynamic', [] )
     'max': undefined
   })
 
-  .directive( 'fittext', [ 'config', 'fitTextConfig', '$timeout', function( config, fitTextConfig, $timeout ) {
+  .directive( 'dynamicText', [ 'config', 'dynamicTextConfig', '$timeout', function( config, fitTextConfig, $timeout ) {
     return {
       restrict: 'A',
       scope: true,
@@ -31,30 +31,16 @@ angular.module( 'ngFitTextDynamic', [] )
       replace: true,
       template: function( element, attrs ) {
         var tag = element[0].nodeName;
-        return "<" + tag + " data-ng-transclude data-ng-style='{fontSize:fontSize}'></" + tag + ">";
+        return "<" + tag + " ng-transclude></" + tag + ">";
       },
       link: function( scope, element, attrs ) {
         angular.extend( config, fitTextConfig.config );
 
-        scope.compressor = attrs.fittext || 1;
-        scope.minFontSize = attrs.fittextMin || config.min || 0;
-        scope.maxFontSize = attrs.fittextMax || config.max || Number.POSITIVE_INFINITY;
-        scope.dynamic = attrs.fittextEvent;
+        scope.minFontSize = attrs.dynamicTextMin || config.min || 0;
+        scope.maxFontSize = attrs.dynamicTextMax || config.max || Number.POSITIVE_INFINITY;
+        scope.dynamic = attrs.dynamicText;
         scope.elementWidth = element[0].offsetWidth;
-
-        scope.resizer = function() {
-          scope.elementWidth = element[0].offsetWidth;
-          scope.fontSizeNumeric = Math.max(
-            Math.min(
-              scope.elementWidth / ( scope.compressor * 10 ),
-              parseFloat( scope.maxFontSize )
-            ),
-            parseFloat( scope.minFontSize )
-          );
-          scope.fontSize = scope.fontSizeNumeric + 'px';
-
-        };
-        scope.resizer();
+        scope.fontSizeNumeric = document.defaultView.getComputedStyle(element[0]).fontSize.split('px')[0];
 
         scope.dynamicResizer = function() {
           if (element[0].children[0].offsetHeight < scope.fontSizeNumeric*2) {
@@ -66,6 +52,9 @@ angular.module( 'ngFitTextDynamic', [] )
             else {
               scope.fontSizeNumeric = scope.maxFontSize;
               element[0].style.fontSize = scope.fontSizeNumeric + 'px';
+              if (element[0].children[0].offsetHeight > scope.fontSizeNumeric*2) {
+                scope.dynamicResizer();
+              }
             }
           }
           else {
@@ -88,15 +77,15 @@ angular.module( 'ngFitTextDynamic', [] )
         });
 
         config.debounce == true
-          ? angular.element( window ).bind( 'resize', _debounce( function(){ scope.$apply( scope.resizer );}, config.delay ))
-          : angular.element( window ).bind( 'resize', function(){ scope.$apply( scope.resizer );});
+          ? angular.element( window ).bind( 'resize', _debounce( function(){ scope.$apply( scope.dynamicResizer );}, config.delay ))
+          : angular.element( window ).bind( 'resize', function(){ scope.$apply( scope.dynamicResizer );});
 
         function _debounce(a,b,c){var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f)},b),c&&!d&&a.apply(e,f)}}
       }
     }
   }])
 
-  .provider( 'fitTextConfig', function() {
+  .provider( 'dynamicTextConfig', function() {
     var self = this;
     this.config = {};
     this.$get = function() {
