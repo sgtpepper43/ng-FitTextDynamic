@@ -1,16 +1,16 @@
-/* ng-FitTextDynamic v1.0.3
- * https://github.com/sgtpepper43/ng-FitTextDynamic
+/* ng-FitTextDynamic v1.0.5
+ * https://github.com/sgtpepper23/ng-FitTextDynamic
  *
  * Original angular project: https://github.com/patrickmarabeas/ng-FitText.js
  *
  * Original jQuery project: https://github.com/davatron5000/FitText.js
  * Includes use of Underscore's debounce function
  *
- * Copyright 2014, Trevor Fenn http://TrevorFenn.info
+ * Copyright 2012, Trevor Fenn http://TrevorFenn.info
  * Released under the MIT license
  * http://opensource.org/licenses/mit-license.php
  *
- * Date: 21/05/2014
+ * Date: 21/05/2012
  */
 
 'use strict';
@@ -44,8 +44,8 @@ angular.module( 'ngFitTextDynamic', [] )
 
         scope.dynamicResizer = function() {
           if (element[0].children[0].offsetHeight < scope.fontSizeNumeric*2) {
-            if (scope.fontSizeNumeric+4 < scope.maxFontSize) {
-              scope.fontSizeNumeric += 4;
+            if (scope.fontSizeNumeric+2 < scope.maxFontSize) {
+              scope.fontSizeNumeric += 2;
               element[0].style.fontSize = scope.fontSizeNumeric + 'px';
               scope.dynamicResizer();
             }
@@ -58,8 +58,8 @@ angular.module( 'ngFitTextDynamic', [] )
             }
           }
           else {
-            if (scope.fontSizeNumeric-4 > scope.minFontSize) {
-              scope.fontSizeNumeric -= 4;
+            if (scope.fontSizeNumeric-2 > scope.minFontSize) {
+              scope.fontSizeNumeric -= 2;
               element[0].style.fontSize = scope.fontSizeNumeric + 'px';
               if (element[0].children[0].offsetHeight > scope.fontSizeNumeric*2) {
                 scope.dynamicResizer();
