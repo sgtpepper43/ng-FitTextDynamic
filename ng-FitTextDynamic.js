@@ -40,7 +40,7 @@ angular.module( 'ngFitTextDynamic', [] )
         scope.maxFontSize = attrs.dynamicTextMax || config.max || Number.POSITIVE_INFINITY;
         scope.dynamic = attrs.dynamicText;
         scope.elementWidth = element[0].offsetWidth;
-        scope.fontSizeNumeric = document.defaultView.getComputedStyle(element[0]).fontSize.split('px')[0];
+        scope.fontSizeNumeric = parseInt(document.defaultView.getComputedStyle(element[0]).fontSize.split('px')[0]);
 
         scope.dynamicResizer = function() {
           if (element[0].children[0].offsetHeight < scope.fontSizeNumeric*2) {
